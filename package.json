@@ -1,0 +1,22 @@
+{
+  "name": "r3f-goose",
+  "version": "0.9.0",
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@react-three/drei": "7.16.3",
+    "@react-three/fiber": "7.0.16",
+    "@react-three/postprocessing": "2.0.5",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "three": "0.133.1"
+  },
+  "devDependencies": {
+    "@types/three": "^0.135.0",
+    "@vitejs/plugin-react": "^1.0.7",
+    "vite": "^2.7.2"
+  }
+}
