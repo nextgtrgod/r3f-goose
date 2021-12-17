@@ -11,7 +11,7 @@ export default function Goose({ z, speed }) {
 	const { width, height } = viewport.getCurrentViewport(camera, [0, 0, z])
 
 	const [data] = useState({
-		x: THREE.MathUtils.randFloatSpread(2),
+		x: THREE.MathUtils.randFloatSpread(1.5),
 		y: THREE.MathUtils.randFloatSpread(2 * height),
 		rX: Math.random() * Math.PI,
 		rY: Math.random() * Math.PI,
@@ -32,7 +32,7 @@ export default function Goose({ z, speed }) {
 
 		ref.current.scale.set(.75, .75, .75)
 
-		if (data.y > height) data.y = -height
+		if (data.y > height * 1.25) data.y = -height
 	})
 
 	return (
