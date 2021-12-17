@@ -30,7 +30,7 @@ export default function Goose({ z, speed }) {
 			(data.rZ += 0.001),
 		)
 
-		ref.current.scale.set(.5, .5, .5)
+		ref.current.scale.set(.75, .75, .75)
 
 		if (data.y > height) data.y = -height
 	})
