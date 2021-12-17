@@ -4,7 +4,14 @@ import { Stats, Environment, OrbitControls } from '@react-three/drei'
 import { EffectComposer, DepthOfField, Noise, Vignette } from '@react-three/postprocessing'
 import Goose from './components/Goose.jsx'
 
-export default function App({ count = 80, speed=1, depth = 80 }) {
+const debug = window.location.hash === '#debug'
+
+export default function App({
+	count = 80,
+	speed = 1,
+	depth = 80,
+	easing = x => (1 - (x - 1) ** 2) ** .5,
+}) {
 	return (
 		<Canvas
 			gl={{ alpha: false, antialias: false }}
@@ -19,23 +26,27 @@ export default function App({ count = 80, speed=1, depth = 80 }) {
 				{Array.from({ length: count }, (_, i) => (
 					<Goose
 						key={i}
-						z={-(i / count) * depth - 20}
+						z={-Math.round(easing(i / count) * depth)}
 						speed={speed}
 					/>
 				))}
 			</Suspense>
 			<EffectComposer multisampling={0}>
 				<DepthOfField
-					target={[0, 0, 60]}
+					target={[0, 0, .5 * depth]}
 					focalLength={.5}
-					bokehScale={11}
+					bokehScale={12}
 					height={700}
 				/>
 				{/* <Noise premultiply opacity={.5} /> */}
 				{/* <Vignette eskil={false} offset={0.1} darkness={1.1} /> */}
 			</EffectComposer>
-			<Stats showPanel={0} />
-			{/* <OrbitControls /> */}
+			{debug && (
+				<>
+					<Stats showPanel={0} />
+					<OrbitControls />
+				</>
+			)}
 		</Canvas>
 	)
 }
