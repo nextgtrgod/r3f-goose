@@ -1,6 +1,6 @@
-import { Suspense } from 'react'
-import { Canvas } from '@react-three/fiber'
-import { Stats, Environment, OrbitControls } from '@react-three/drei'
+import { useState, Suspense } from 'react'
+import { Canvas, useThree } from '@react-three/fiber'
+import { Stats, Environment, OrbitControls, ScrollControls } from '@react-three/drei'
 import { EffectComposer, DepthOfField, Noise, Vignette } from '@react-three/postprocessing'
 import Goose from './components/Goose.jsx'
 
@@ -8,7 +8,7 @@ const debug = window.location.hash === '#debug'
 
 export default function App({
 	count = 80,
-	speed = 1,
+	speed = 1.5,
 	depth = 80,
 	easing = x => (1 - (x - 1) ** 2) ** .5,
 }) {
@@ -23,13 +23,17 @@ export default function App({
 			<spotLight position={[10, 20, 10]} penumbra={1} intensity={1} color="pink"/>
 			<Suspense fallback={null}>
 				<Environment preset="sunset" />
-				{Array.from({ length: count }, (_, i) => (
-					<Goose
-						key={i}
-						z={-Math.round(easing(i / count) * depth)}
-						speed={speed}
-					/>
-				))}
+				<ScrollControls pages={4}>
+					{Array.from({ length: count }, (_, i) => (
+						<Goose
+							key={i}
+							index={i}
+							z={-Math.round(easing(i / count) * depth)}
+							speed={speed}
+							depth={depth}
+						/>
+					))}
+				</ScrollControls>
 			</Suspense>
 			<EffectComposer multisampling={0}>
 				<DepthOfField
@@ -44,7 +48,11 @@ export default function App({
 			{debug && (
 				<>
 					<Stats showPanel={0} />
-					<OrbitControls />
+					{/* <OrbitControls
+						target={[0, 0, -depth / 2]}
+						// minAzimuthAngle={-Math.PI / 8}
+						// maxAzimuthAngle={Math.PI / 8}
+					/> */}
 				</>
 			)}
 		</Canvas>

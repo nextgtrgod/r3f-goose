@@ -1,14 +1,17 @@
 import * as THREE from 'three'
 import { useRef, useState } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
-import { useGLTF } from '@react-three/drei'
+import { useGLTF, useScroll } from '@react-three/drei'
+// import { useSpring, animated, config } from '@react-spring/three'
 import gooseModelUrl from '../models/goose.glb?url'
 
-export default function Goose({ z, speed }) {
+export default function Goose({ index, z, speed }) {
 	const { nodes, materials } = useGLTF(gooseModelUrl)
-	const ref = useRef()
 	const { viewport, camera } = useThree()
 	const { width, height } = viewport.getCurrentViewport(camera, [0, 0, z])
+
+	const ref = useRef()
+	const scroll = useScroll()
 
 	const [data] = useState({
 		x: THREE.MathUtils.randFloatSpread(1.5),
@@ -19,24 +22,31 @@ export default function Goose({ z, speed }) {
 	})
 
 	useFrame((state, dt) => {
-		ref.current.position.set(
-			(data.x * width),
-			(data.y += 0.025),
-			z,
-		)
+		if (dt < 0.1)  {
+			ref.current.position.set(
+				(data.x * width),
+				(data.y += (speed + scroll.offset * 8) * dt),
+				z,
+			)
+		}
+
+		const rotation = 0.08 * dt
+
 		ref.current.rotation.set(
-			(data.rX += 0.001),
-			(data.rY += 0.001 * speed),
-			(data.rZ += 0.001),
+			(data.rX += rotation),
+			(data.rY += rotation),
+			(data.rZ += rotation),
 		)
 
-		ref.current.scale.set(.75, .75, .75)
+		const offsetHeight = height * (index === 0 ? 4 : 1)
 
-		if (data.y > height * 1.25) data.y = -height
+		if (data.y > offsetHeight) data.y = -offsetHeight
 	})
 
+	const scale = 0.75
+
 	return (
-		<group ref={ref}>
+		<group ref={ref} scale={scale}>
 			<mesh geometry={nodes.goose_1.geometry} material={materials.eye} />
 			<mesh geometry={nodes.goose_2.geometry} material={materials.body} />
 			<mesh geometry={nodes.goose_3.geometry} material={materials.paws} />
