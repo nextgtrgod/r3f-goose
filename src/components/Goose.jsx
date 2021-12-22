@@ -3,7 +3,7 @@ import { useRef, useState } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useGLTF, useScroll } from '@react-three/drei'
 // import { useSpring, animated, config } from '@react-spring/three'
-import gooseModelUrl from '../models/goose.glb?url'
+import gooseModelUrl from '@/assets/models/goose.glb?url'
 
 export default function Goose({ index, z, speed }) {
 	const { nodes, materials } = useGLTF(gooseModelUrl)
